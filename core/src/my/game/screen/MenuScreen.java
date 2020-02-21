@@ -8,10 +8,15 @@ import com.badlogic.gdx.math.Vector2;
 import my.game.base.Basescreen;
 
 public class MenuScreen extends Basescreen {
+
+    private static final float V_LEN=1f;
+
     private Texture img;
      private Vector2 touth;
      private  Vector2 v;
      private Vector2 pos;
+     private Vector2 temp;
+
 
     @Override
     public void show() {
@@ -20,6 +25,7 @@ public class MenuScreen extends Basescreen {
         touth = new Vector2();
         v = new Vector2();
         pos = new Vector2();
+        temp = new Vector2();
     }
 
     @Override
@@ -27,8 +33,11 @@ public class MenuScreen extends Basescreen {
         super.render(delta);
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (pos.x+ img.getHeight() != touth.x){
+        temp.set(touth);
+        if (temp.sub(pos).len()> V_LEN){
             pos.add(v);
+        } else {
+            pos.set(touth);
         }
         batch.begin();
         batch.draw(img, pos.x, pos.y);
@@ -46,8 +55,7 @@ public class MenuScreen extends Basescreen {
         super.touchDown(screenX, screenY, pointer, button);
         //Опрежеляет куда нажал пользователь
         touth.set(screenX,Gdx.graphics.getHeight()-screenY);
-        touth.sub(pos);
-        v=touth.scl(0.01f,0.01f);
+        v.set(touth.cpy().sub(pos).setLength(V_LEN));
         return false;
 
     }
