@@ -10,11 +10,13 @@ import my.game.base.BaseScreen;
 import my.game.base.BaseScreen;
 import my.game.math.Rect;
 import my.game.sprite.Background;
+import my.game.sprite.Ship;
 
 public class GameScreen extends BaseScreen {
 
     private TextureAtlas atlas;
 
+    private Ship ship;
     private Texture bg;
     private Background background;
 
@@ -24,6 +26,7 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
+        ship = new Ship(atlas);
     }
 
     @Override
@@ -36,6 +39,7 @@ public class GameScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
+        ship.resize(worldBounds);
     }
 
     @Override
@@ -73,6 +77,7 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
+        ship.draw(batch);
         batch.end();
     }
 }
