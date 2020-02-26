@@ -14,7 +14,7 @@ import my.game.sprite.Ship;
 
 public class GameScreen extends BaseScreen {
 
-    private TextureAtlas atlas;
+    private TextureAtlas mainAtlas;
 
     private Ship ship;
     private Texture bg;
@@ -25,8 +25,8 @@ public class GameScreen extends BaseScreen {
         super.show();
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
-        atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
-        ship = new Ship(atlas);
+        mainAtlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
+        ship = new Ship(mainAtlas.findRegion("main_ship"));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void dispose() {
         bg.dispose();
-        atlas.dispose();
+        mainAtlas.dispose();
         super.dispose();
     }
 
