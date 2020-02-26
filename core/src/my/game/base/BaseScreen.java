@@ -67,6 +67,7 @@ public class BaseScreen implements Screen, InputProcessor {
         System.out.println("pause");
     }
 
+
     @Override
     public void resume() {
         System.out.println("resume");
