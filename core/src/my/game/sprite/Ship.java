@@ -8,11 +8,8 @@ import my.game.math.Rect;
 
 public class Ship extends Sprite {
 
-    private static final float V_LEN = 0.01f;
     private Vector2 touch;
     private Vector2 v;
-
-    protected Rect worldBounds;
 
     private Vector2 v0 = new Vector2(0.5f, 0);
 
@@ -26,26 +23,19 @@ public class Ship extends Sprite {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(0.4f);
+        setHeightProportion(0.2f);
     }
 
     @Override
     public void touchDown(Vector2 touch, int pointer, int button) {
         this.touch.set(touch);
-        if(touch.x < 0) {
-            moveLeft();
-        } else {
-            moveRight();
-        }
     }
 
     public void moveRight() {
-        System.out.println( "shipRight:" + getRight() + "/worldRight" + worldBounds.getRight());
         v.set(v0);
     }
 
     public void moveLeft() {
-        System.out.println( "shipLef:" + getLeft() + "/worldLeft" + worldBounds.getLeft());
         v.set(v0).rotate(180);
     }
 
@@ -53,6 +43,11 @@ public class Ship extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
+        if(touch.x < 0) {
+            moveLeft();
+        } else {
+            moveRight();
+        }
     }
 
     @Override
