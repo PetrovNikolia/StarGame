@@ -1,83 +1,71 @@
 package my.game.sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import my.game.base.Sprite;
+import my.game.base.Ship;
 import my.game.math.Rect;
-import my.game.math.Rnd;
 import my.game.pool.BulletPool;
+import my.game.pool.ExplosionPool;
 
-public class MainShip extends Sprite {
+public class MainShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
 
-    private Vector2 v = new Vector2();
-    private Vector2 v0 = new Vector2(0.5f, 0) ;
-
-    private Rect worldBounds;
-
-    private BulletPool bulletPool;
-    private TextureRegion bulletRegion;
-    private Vector2 bulletV;
-    private Vector2 billetPos;
-
-    private boolean presetLeft;
-    private boolean presetRight;
+    private boolean pressedLeft;
+    private boolean pressedRight;
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    private float animateTimer;
-    private float animateInterval = 0.1f;
-
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
-        super(atlas.findRegion("main_ship"),1,2,2);
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
+        super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.v = new Vector2();
+        this.v0 = new Vector2(0.5f, 0);
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletV = new Vector2(0, 0.5f);
-        this.billetPos=new Vector2();
-        this.animateTimer = Rnd.nextFloat(0, 1f);
+        this.bulletPos = new Vector2();
+        this.bulletHeight = 0.01f;
+        this.damage = 1;
+        this.reloadInterval = 0.2f;
+        this.hp = 100;
+        this.shootSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/laser.wav"));
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        setHeightProportion(0.2f);
+        this.worldBounds = worldBounds;
+        setHeightProportion(0.15f);
         setBottom(worldBounds.getBottom() + 0.05f);
-        this.worldBounds= worldBounds;
-
     }
 
     @Override
     public void update(float delta) {
-        pos.mulAdd(v, delta);
-        if(getRight() > worldBounds.getRight()){
+        bulletPos.set(pos.x, getTop());
+        super.update(delta);
+        if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
-            stopMove();
+            stop();
         }
-        if(getLeft() < worldBounds.getLeft()){
+        if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
-            stopMove();
+            stop();
         }
-        animateTimer += delta;
-        if (animateTimer >= animateInterval) {
-            animateTimer = 0;
-            shoot();
-        }
-
     }
 
     @Override
     public void touchDown(Vector2 touch, int pointer, int button) {
-        if(touch.x < worldBounds.pos.x){
-            if(leftPointer!= INVALID_POINTER){
+        if (touch.x < worldBounds.pos.x) {
+            if (leftPointer != INVALID_POINTER) {
                 return;
             }
             leftPointer = pointer;
             moveLeft();
         } else {
-            if(rightPointer!= INVALID_POINTER){
+            if (rightPointer != INVALID_POINTER) {
                 return;
             }
             rightPointer = pointer;
@@ -87,57 +75,58 @@ public class MainShip extends Sprite {
 
     @Override
     public void touchUp(Vector2 touch, int pointer, int button) {
-        if(pointer == leftPointer){
-            leftPointer=INVALID_POINTER;
-            if(rightPointer!= INVALID_POINTER){
+        if (pointer == leftPointer) {
+            leftPointer = INVALID_POINTER;
+            if (rightPointer != INVALID_POINTER) {
                 moveRight();
             } else {
-                stopMove();
+                stop();
             }
-        } else if(pointer == rightPointer){
+        } else if (pointer == rightPointer) {
             rightPointer = INVALID_POINTER;
-            if(leftPointer != INVALID_POINTER){
+            if (leftPointer != INVALID_POINTER) {
                 moveLeft();
             } else {
-                stopMove();
+                stop();
             }
         }
     }
 
-    public void keyDown(int keyCode){
-        switch (keyCode){
+    public void keyDown(int keycode) {
+        switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.LEFT:
-                presetLeft = true;
+                pressedLeft = true;
                 moveLeft();
                 break;
             case Input.Keys.D:
             case Input.Keys.RIGHT:
-                presetRight = true;
+                pressedRight = true;
                 moveRight();
                 break;
             case Input.Keys.UP:
                 shoot();
         }
     }
-    public void keyUp(int keyCode){
-        switch (keyCode){
+
+    public void keyUp(int keycode) {
+        switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.LEFT:
-                presetLeft = false;
-                if(presetRight){
+                pressedLeft = false;
+                if (pressedRight) {
                     moveRight();
                 } else {
-                    stopMove();
+                    stop();
                 }
                 break;
             case Input.Keys.D:
             case Input.Keys.RIGHT:
-                presetRight = false;
-                if(presetLeft){
+                pressedRight = false;
+                if (pressedLeft) {
                     moveLeft();
                 } else {
-                    stopMove();
+                    stop();
                 }
                 break;
         }
@@ -151,13 +140,8 @@ public class MainShip extends Sprite {
         v.set(v0).rotate(180);
     }
 
-    private void stopMove() {
+    private void stop() {
         v.setZero();
     }
 
-    private void shoot(){
-        Bullet bullet = bulletPool.obtain();
-        billetPos.set(pos.x, pos.y+halfHeight);
-        bullet.set(this,bulletRegion, billetPos ,bulletV,0.01f,worldBounds,1 );
-    }
 }

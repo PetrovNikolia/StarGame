@@ -7,64 +7,64 @@ import java.util.List;
 
 public abstract class SpritesPool<T extends Sprite> {
 
-    private final List<T> activeObject = new ArrayList<>();
+    private final List<T> activeObjects = new ArrayList<>();
 
-    private final List<T> freeObject = new ArrayList<>();
+    private final List<T> freeObjects = new ArrayList<>();
 
     protected abstract T newObject();
 
-    public T obtain(){
+    public T obtain() {
         T object;
-        if(freeObject.isEmpty()){
+        if (freeObjects.isEmpty()) {
             object = newObject();
         } else {
-            object = freeObject.remove(freeObject.size()-1);
+            object = freeObjects.remove(freeObjects.size() - 1);
         }
-        activeObject.add(object);
+        activeObjects.add(object);
+        System.out.println(getClass().getName() + " active/free: " + activeObjects.size() + "/" + freeObjects.size());
         return object;
     }
 
-    public void updateActiveSprites(float delta){
-        for(Sprite sprite : activeObject){
-            if(!sprite.isDestroyed()){
+    public void updateActiveSprites(float delta) {
+        for (Sprite sprite : activeObjects) {
+            if (!sprite.isDestroyed()) {
                 sprite.update(delta);
             }
         }
     }
 
-    public void drawActiveSprites(SpriteBatch batch){
-        for(Sprite sprite : activeObject){
-            if(!sprite.isDestroyed()){
+    public void drawActiveSprites(SpriteBatch batch) {
+        for (Sprite sprite : activeObjects) {
+            if (!sprite.isDestroyed()) {
                 sprite.draw(batch);
             }
         }
     }
 
-    public void freeAllDestroyedActiveObject(){
-        for (int i = 0; i < activeObject.size() ; i++) {
-            T sprite = activeObject.get(i);
-            if(sprite.isDestroyed()){
+    public void  freeAllDestroyedActiveObjects() {
+        for (int i = 0; i < activeObjects.size(); i++) {
+            T sprite = activeObjects.get(i);
+            if (sprite.isDestroyed()) {
                 free(sprite);
                 i--;
-                sprite.flushdestroy();
+                sprite.flushDestroy();
             }
         }
     }
 
-    public void dispose(){
-        activeObject.clear();
-        freeObject.clear();
+    public void dispose() {
+        activeObjects.clear();
+        freeObjects.clear();
     }
 
-    public List<T> getActiveObject() {
-        return activeObject;
+    public List<T> getActiveObjects() {
+        return activeObjects;
     }
 
-    private void free(T object){
-        if(activeObject.remove(object)){
-            freeObject.add(object);
+    private void free(T object) {
+        if (activeObjects.remove(object)) {
+            freeObjects.add(object);
         }
+        System.out.println(getClass().getName() + " active/free: " + activeObjects.size() + "/" + freeObjects.size());
     }
-
-
 }

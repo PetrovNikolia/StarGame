@@ -12,7 +12,6 @@ import my.game.math.Rect;
 import my.game.sprite.Background;
 import my.game.sprite.ButtonExit;
 import my.game.sprite.ButtonPlay;
-import my.game.sprite.Logo;
 import my.game.sprite.Star;
 
 public class MenuScreen extends BaseScreen {

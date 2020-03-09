@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import my.game.math.Rect;
-import my.game.math.Rect;
 import my.game.utils.Regions;
 
 public abstract class Sprite extends Rect {
@@ -16,6 +15,9 @@ public abstract class Sprite extends Rect {
     protected int frame;
     protected boolean destroyed;
 
+    public Sprite() {
+    }
+
     public Sprite(TextureRegion region) {
         if (region == null) {
             throw new RuntimeException("Не задана текстура");
@@ -24,15 +26,11 @@ public abstract class Sprite extends Rect {
         regions[0] = region;
     }
 
-    public Sprite(){
-
-    }
-
-    public Sprite(TextureRegion region, int rows, int cols, int frames){
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
         if (region == null) {
             throw new RuntimeException("Не задана текстура");
         }
-        this.regions = Regions.split(region, rows , cols, frames);
+        this.regions = Regions.split(region, rows, cols, frames);
     }
 
     public void draw(SpriteBatch batch) {
@@ -78,11 +76,11 @@ public abstract class Sprite extends Rect {
         this.scale = scale;
     }
 
-    public void destroy(){
+    public void destroy() {
         this.destroyed = true;
     }
 
-    public void flushdestroy(){
+    public void flushDestroy() {
         this.destroyed = false;
     }
 
