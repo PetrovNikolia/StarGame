@@ -3,7 +3,6 @@ package my.game.pool;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
-import my.game.base.Sprite;
 import my.game.base.SpritesPool;
 import my.game.sprite.Explosion;
 

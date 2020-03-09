@@ -11,6 +11,10 @@ import my.game.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
+    private enum State {DESCENT, FIGHT}
+    private State state;
+    private Vector2 descentV = new Vector2(0, -0.15f);
+
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound, Rect worldBounds) {
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
@@ -26,8 +30,24 @@ public class Enemy extends Ship {
     public void update(float delta) {
         bulletPos.set(pos.x, getBottom());
         super.update(delta);
-        if (getBottom() < worldBounds.getBottom()) {
-            destroy();
+        pos.mulAdd(v, delta);
+        switch (state) {
+            case DESCENT:
+                if (getTop() <= worldBounds.getTop()) {
+                    v.set(v0);
+                    state = State.FIGHT;
+                }
+                break;
+            case FIGHT:
+                reloadTimer += delta;
+                if (reloadTimer >= reloadInterval) {
+                    reloadTimer = 0f;
+                    shoot();
+                }
+                if (getBottom() < worldBounds.getBottom()) {
+                    boom();
+                }
+                break;
         }
     }
 
@@ -52,6 +72,8 @@ public class Enemy extends Ship {
         this.reloadTimer = reloadInterval;
         setHeightProportion(height);
         this.hp = hp;
-        v.set(v0);
+        v.set(descentV);
+        state = State.DESCENT;
+        reloadTimer = reloadInterval;
     }
 }

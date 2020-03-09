@@ -17,6 +17,7 @@ import my.game.pool.BulletPool;
 import my.game.pool.EnemyPool;
 import my.game.pool.ExplosionPool;
 import my.game.sprite.Background;
+import my.game.sprite.Bullet;
 import my.game.sprite.Enemy;
 import my.game.sprite.MainShip;
 import my.game.sprite.Star;
@@ -154,6 +155,18 @@ public class GameScreen extends BaseScreen {
             if (enemy.pos.dst2(mainShip.pos) < minDist * minDist) {
                 enemy.destroy();
                 enemy.boom();
+                return;
+            }
+        }
+
+        List<Bullet> enemyBullet = bulletPool.getActiveObjects();
+        for (Bullet bullet : enemyBullet) {
+            if (bullet.isDestroyed()) {
+                continue;
+            }
+            float minDist = bullet.getHalfWidth() + mainShip.getHalfWidth();
+            if (bullet.pos.dst2(mainShip.pos) < minDist * minDist) {
+                bullet.destroy();
                 return;
             }
         }
