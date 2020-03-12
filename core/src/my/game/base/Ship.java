@@ -15,6 +15,8 @@ public class Ship extends Sprite {
     protected Vector2 v;
     protected Vector2 v0;
 
+    protected final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
+
     protected Rect worldBounds;
 
     protected BulletPool bulletPool;
@@ -32,6 +34,8 @@ public class Ship extends Sprite {
 
     protected int hp;
 
+    protected float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
+
     public Ship() {
     }
 
@@ -47,6 +51,10 @@ public class Ship extends Sprite {
             reloadTimer = 0f;
             shoot();
         }
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
+            frame = 0;
+        }
     }
 
     public void dispose() {
@@ -59,6 +67,15 @@ public class Ship extends Sprite {
         boom();
     }
 
+    public void damage(int damage) {
+        this.hp -= damage;
+        if (hp <= 0) {
+            destroy();
+        }
+        damageAnimateTimer = 0f;
+        frame = 1;
+    }
+
     protected void shoot() {
         shootSound.play();
         Bullet bullet = bulletPool.obtain();
@@ -68,5 +85,12 @@ public class Ship extends Sprite {
     public void boom() {
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), pos);
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < pos.y);
     }
 }

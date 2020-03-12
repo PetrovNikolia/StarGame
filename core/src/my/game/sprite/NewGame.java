@@ -7,22 +7,19 @@ import my.game.base.ScaledButton;
 import my.game.math.Rect;
 import my.game.screen.GameScreen;
 
-public class ButtonPlay extends ScaledButton {
-
-    private static final float PADDING = 0.05f;
+public class NewGame extends ScaledButton {
 
     private final Game game;
 
-    public ButtonPlay(TextureAtlas atlas, Game game) {
-        super(atlas.findRegion("btPlay"));
+    public NewGame(TextureAtlas atlas,Game game) {
+        super(atlas.findRegion("button_new_game"));
         this.game = game;
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        setHeightProportion(0.26f);
-        setLeft(worldBounds.getLeft() + PADDING);
-        setBottom(worldBounds.getBottom() + PADDING);
+        setHeightProportion(0.09f);
+        setBottom(-0.1f);
     }
 
     @Override
