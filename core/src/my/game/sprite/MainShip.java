@@ -31,7 +31,7 @@ public class MainShip extends Ship {
         this.bulletHeight = 0.01f;
         this.damage = 1;
         this.reloadInterval = 0.2f;
-        this.hp = 1;
+        this.hp = 100;
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/laser.wav"));
     }
 

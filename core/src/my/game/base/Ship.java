@@ -76,6 +76,18 @@ public class Ship extends Sprite {
         frame = 1;
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public Vector2 getV() {
+        return v;
+    }
+
     protected void shoot() {
         shootSound.play();
         Bullet bullet = bulletPool.obtain();
