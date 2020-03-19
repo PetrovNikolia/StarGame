@@ -14,8 +14,6 @@ public class Bullet extends Sprite {
     private int damage;
     private Sprite owner;
 
-
-
     public Bullet( ) {
         regions = new TextureRegion[1];
         v = new Vector2();
@@ -57,4 +55,5 @@ public class Bullet extends Sprite {
     public Sprite getOwner() {
         return owner;
     }
+
 }

@@ -1,5 +1,6 @@
 package my.game.sprite;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +11,7 @@ import my.game.math.Rnd;
 
 public class Meteorite extends Sprite {
 
-    private static final float METEORITE_HEIGHT = 0.2f;
+    private static final float METEORITE_HEIGHT = 0.025f;
 
     private final Vector2 v;
     private Rect worldBounds;
@@ -18,10 +19,10 @@ public class Meteorite extends Sprite {
     private float animateTimer;
     private float animateInterval = 1f;
 
-    public Meteorite(TextureRegion region) {
+    public Meteorite(Texture region) {
         super(new TextureRegion(region));
         v = new Vector2();
-        v.set(Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.1f, -0.01f));
+        v.set(Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.2f, -0.1f));
         animateTimer = Rnd.nextFloat(0, 1f);
     }
 

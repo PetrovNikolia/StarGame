@@ -22,6 +22,7 @@ import my.game.sprite.Bullet;
 import my.game.sprite.Enemy;
 import my.game.sprite.MainShip;
 import my.game.sprite.MessageGameOver;
+import my.game.sprite.Meteorite;
 import my.game.sprite.NewGame;
 import my.game.sprite.Star;
 import my.game.sprite.TrackingStar;
@@ -31,6 +32,7 @@ import my.game.utils.Font;
 public class GameScreen extends BaseScreen {
 
     private static final int STAR_COUNT = 64;
+    private static final int METEORITE_COUNT = 16;
     private static final float FONT_SIZE = 0.02f;
     private static final String FRAGS = "Frags:";
     private static final String HP = "HP:";
@@ -79,15 +81,20 @@ public class GameScreen extends BaseScreen {
     private StringBuilder sbHp;
     private StringBuilder sbLevel;
 
+    private Meteorite[] meteorites;
+    private Texture img;
+
+
 
     @Override
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
+  //      img = new Texture("badlogic.jpg");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
-        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
-        explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/bullet.wav"));
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/explosion.wav"));
         stars = new TrackingStar[STAR_COUNT];
         bulletPool = new BulletPool();
         explosionPool = new ExplosionPool(atlas, explosionSound);
@@ -97,7 +104,11 @@ public class GameScreen extends BaseScreen {
         for (int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new TrackingStar(atlas, mainShip.getV());
         }
-        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        meteorites = new Meteorite[METEORITE_COUNT];
+ //       for (int i = 0; i < METEORITE_COUNT; i++) {
+  //          meteorites[i] = new Meteorite(img);
+ //       }
+        music = Gdx.audio.newMusic(Gdx.files.internal("Sounds/music.mp3"));
         music.setLooping(true);
         music.play();
         messageGameOver = new MessageGameOver(atlas);
@@ -126,6 +137,9 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.resize(worldBounds);
         }
+   //     for (Meteorite meteorite : meteorites) {
+    //        meteorite.resize(worldBounds);
+     //   }
         mainShip.resize(worldBounds);
         messageGameOver.resize(worldBounds);
         newGame.resize(worldBounds);
@@ -180,7 +194,9 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             mainShip.touchDown(touch, pointer, button);
         }
-        newGame.touchDown(touch, pointer, button);
+        if (state == State.GAME_OVER) {
+            newGame.touchDown(touch, pointer, button);
+        }
         return false;
     }
 
@@ -189,7 +205,9 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             mainShip.touchUp(touch, pointer, button);
         }
-        newGame.touchUp(touch, pointer, button);
+        if (state == State.GAME_OVER) {
+            newGame.touchUp(touch, pointer, button);
+        }
         return false;
     }
 
@@ -197,6 +215,9 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
+ //       for (Meteorite meteorite : meteorites) {
+   //         meteorite.update(delta);
+     //   }
         explosionPool.updateActiveSprites(delta);
         if (state == State.PLAYING) {
             mainShip.update(delta);
@@ -258,6 +279,9 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
+    //    for (Meteorite meteorite : meteorites) {
+     //       meteorite.draw(batch);
+      //  }
         explosionPool.drawActiveSprites(batch);
         if (state == State.PLAYING) {
             mainShip.draw(batch);

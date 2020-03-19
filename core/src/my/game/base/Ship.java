@@ -88,6 +88,10 @@ public class Ship extends Sprite {
         return v;
     }
 
+    public Vector2 getBulletPos() {return bulletPos;}
+
+    public float getBulletHeight() {return bulletHeight;}
+
     protected void shoot() {
         shootSound.play();
         Bullet bullet = bulletPool.obtain();
