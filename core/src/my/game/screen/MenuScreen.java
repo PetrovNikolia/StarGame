@@ -12,7 +12,6 @@ import my.game.math.Rect;
 import my.game.sprite.Background;
 import my.game.sprite.ButtonExit;
 import my.game.sprite.ButtonPlay;
-import my.game.sprite.Logo;
 import my.game.sprite.Star;
 
 public class MenuScreen extends BaseScreen {
@@ -24,7 +23,6 @@ public class MenuScreen extends BaseScreen {
     private TextureAtlas atlas;
 
     private Texture bg;
-    private Texture img;
     private Background background;
 
     private Star[] stars;
@@ -32,7 +30,6 @@ public class MenuScreen extends BaseScreen {
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
 
-    private Logo logo;
 
     public MenuScreen(Game game) {
         this.game = game;
@@ -43,8 +40,6 @@ public class MenuScreen extends BaseScreen {
         super.show();
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
-        img = new Texture("badlogic.jpg");
-        logo = new Logo(img);
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -59,10 +54,6 @@ public class MenuScreen extends BaseScreen {
         super.render(delta);
         update(delta);
         draw();
-        logo.update(delta);
-        batch.begin();
-        logo.draw(batch);
-        batch.end();
     }
 
     @Override
